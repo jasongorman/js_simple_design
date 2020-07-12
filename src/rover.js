@@ -1,3 +1,15 @@
+const winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' }),
+    ],
+});
+
 class Rover {
 
     position;
@@ -9,6 +21,11 @@ class Rover {
     }
 
     go(instructions) {
+
+        logger.log({
+            level: 'info',
+            message: 'Rover received instructions ' + instructions
+        });
 
         return Array.from(instructions).reduce((rover, instruction) => {
             if (instruction == 'R') {
